@@ -80,8 +80,12 @@ const handleDisconnectedParticipant = (participant) => {
 
 const joinVideoRoom = async (roomName, token) => {
   // join the video room with the Access Token and the given room name
+  const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 15 } });
+  const screenTrack = Twilio.Video.LocalVideoTrack(stream.getTracks()[0], {name: 'myscreenshare'});
+
   const room = await Twilio.Video.connect(token, {
     room: roomName,
+    tracks: [screenTrack]
   });
   return room;
 };
