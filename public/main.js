@@ -11,7 +11,7 @@ const startRoom = async (event) => {
   const roomName = roomNameInput.value;
 
   // fetch an Access Token from the join-room route
-  const response = await fetch("/join-room", {
+  const response = await fetch("https://twilio-serverless-video-iok-gyadav-8038-dev.twil.io/join_room", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -25,7 +25,7 @@ const startRoom = async (event) => {
   const room = await joinVideoRoom(roomName, token);
 
   // render the local and remote participants' video and audio tracks
-  handleConnectedParticipant(room.localParticipant);
+  // handleConnectedParticipant(room.localParticipant);
   room.participants.forEach(handleConnectedParticipant);
   room.on("participantConnected", handleConnectedParticipant);
 
@@ -80,12 +80,13 @@ const handleDisconnectedParticipant = (participant) => {
 
 const joinVideoRoom = async (roomName, token) => {
   // join the video room with the Access Token and the given room name
-  const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 15 } });
-  const screenTrack = Twilio.Video.LocalVideoTrack(stream.getTracks()[0], {name: 'myscreenshare'});
+  // const stream = await navigator.mediaDevices.getDisplayMedia({video: true});
+  // // const stream = await navigator.mediaDevices.getUserMedia({video: {frameRate: 15}});
+  // const screenTrack = Twilio.Video.LocalVideoTrack(stream.getTracks()[0], {name:'myscreenshare'});
 
   const room = await Twilio.Video.connect(token, {
-    room: roomName,
-    tracks: [screenTrack]
+    audio: false, // Enable audio if needed
+    video: false // Disable video sharing
   });
   return room;
 };
